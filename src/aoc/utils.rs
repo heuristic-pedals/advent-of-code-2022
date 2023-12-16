@@ -10,3 +10,8 @@ pub fn parse_cli_day() -> u8 {
     }
     args[1].trim().parse().expect("Unable to parse input.")
 }
+
+pub fn read_text_input() {
+    // placeholder for a read text file function
+    println!("Reading text input");
+}

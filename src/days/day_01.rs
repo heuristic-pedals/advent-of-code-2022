@@ -1,3 +1,3 @@
-pub fn day_01() {
+pub fn part1() {
     println!("day 01");
 }

@@ -1,5 +1,6 @@
-mod utils;
-mod days;
+mod aoc;
+
+use aoc::utils;
 
 fn main() {
     // parse day number from cli input
@@ -7,7 +8,7 @@ fn main() {
 
     // day selection
     match day {
-        1 => days::day_01::part1(),
+        1 => aoc::day_01::part1(),
         _ => println!("Unknown day number {day}."),
     }
 }

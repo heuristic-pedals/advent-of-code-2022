@@ -1,1 +1,5 @@
+# ignore target folder
 /target
+
+# ignore all contents of the data folder
+data/*

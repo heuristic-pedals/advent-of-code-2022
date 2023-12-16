@@ -1,3 +1,12 @@
+mod day_01;
+
 fn main() {
-    println!("Hello, world!");
+
+    let day: u8 = 1;
+
+    match day {
+        1 => {day_01::day_01()},
+        _ => println!("Unknown day {day}.")
+    }
+
 }

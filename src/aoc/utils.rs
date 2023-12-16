@@ -1,4 +1,6 @@
 use std::env;
+use std::fs::File;
+use std::io::{self, BufRead, BufReader};
 
 pub fn parse_cli_day() -> u8 {
     // collect day cli arg - program name takes 0th position so use 1st handle
@@ -11,7 +13,17 @@ pub fn parse_cli_day() -> u8 {
     args[1].trim().parse().expect("Unable to parse input.")
 }
 
-pub fn read_text_input() {
-    // placeholder for a read text file function
-    println!("Reading text input");
+pub fn read_text_input(file_path: &str) -> io::Lines<BufReader<File>>{
+    // read in a text file. modified from this source:
+    // https://doc.rust-lang.org/rust-by-example/std_misc/file/read_lines.html
+    // TODO tidy up this function - not a final version
+    println!("Reading text input: {file_path}");
+    
+    let file = match File::open(file_path){
+        Ok(file) => file,
+        Err(_) => panic!("Unable to read file")
+    };
+    
+    return io::BufReader::new(file).lines()
+
 }

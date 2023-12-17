@@ -1,5 +1,6 @@
 // super is equivalent to crate::aoc::utils;
 use super::utils;
+use std::time::Instant;
 
 pub fn _part1() {
 
@@ -31,6 +32,8 @@ pub fn _part1() {
 
 pub fn part1_part2() {
 
+    let timer: Instant = Instant::now();
+
     let lines: Vec<String> = utils::read_input_whole("data/day_01/input.txt");
 
     let top_x: usize = 3;
@@ -60,6 +63,7 @@ pub fn part1_part2() {
 
     println!("Part 1: Elf number {} has the most calories at {}", max_ids[0], max_cals[0]);
     println!("Part 2: Sum of top {} elves' calories is {}", top_x, top_x_total);
+    println!("Elapsed time: {:.2?}", timer.elapsed());
 
 
 }

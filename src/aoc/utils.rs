@@ -1,5 +1,5 @@
 use std::env;
-use std::fs::File;
+use std::fs::{File, read_to_string};
 use std::io::{self, BufRead};
 
 pub fn parse_cli_day() -> u8 {
@@ -13,10 +13,21 @@ pub fn parse_cli_day() -> u8 {
     args[1].trim().parse().expect("Unable to parse input.")
 }
 
-pub fn read_input_buffer(file_path: &str) -> io::Result<io::Lines<io::BufReader<File>>> {
-    // read in a text file. modified from this source:
+pub fn _read_input_buffer(file_path: &str) -> io::Result<io::Lines<io::BufReader<File>>> {
+    // read in a text file as a buffer - modified from this source:
     // https://doc.rust-lang.org/rust-by-example/std_misc/file/read_lines.html
     println!("Reading text input: {file_path}");
     let file = File::open(file_path)?;
     Ok(io::BufReader::new(file).lines())
+}
+
+pub fn read_input_whole(file_path: &str) -> Vec<String> {
+    // read in a text file (whole) and map/collect to a vector
+    // TODO refactor to remove unwrap
+    let contents = read_to_string(file_path).unwrap();
+
+    contents.lines()
+        .map(String::from)
+        .collect()
+
 }

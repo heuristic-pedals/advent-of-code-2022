@@ -2,12 +2,8 @@
 use super::utils;
 
 pub fn part1() {
-    println!("day 01");
-    if let Ok(lines) = utils::read_input_buffer("data/day_01/test_input.txt") {
-        for line in lines {
-            if let Ok(line) = line {
-                println!("{line}")
-            }
-        }
-    }
+
+    let lines: Vec<String> = utils::read_input_whole("data/day_01/test_input.txt");
+    println!("{:?}", lines)
+
 }

@@ -1,5 +1,5 @@
 use std::env;
-use std::fs::{File, read_to_string};
+use std::fs::{read_to_string, File};
 use std::io::{self, BufRead};
 
 pub fn parse_cli_day() -> u8 {
@@ -21,13 +21,10 @@ pub fn _read_input_buffer(file_path: &str) -> io::Result<io::Lines<io::BufReader
     Ok(io::BufReader::new(file).lines())
 }
 
-pub fn read_input_whole(file_path: &str) -> Vec<String> {
+pub fn _read_input_whole(file_path: &str) -> Vec<String> {
     // read in a text file (whole) and map/collect to a vector
     // TODO refactor to remove unwrap
     let contents = read_to_string(file_path).unwrap();
 
-    contents.lines()
-        .map(String::from)
-        .collect()
-
+    contents.lines().map(String::from).collect()
 }

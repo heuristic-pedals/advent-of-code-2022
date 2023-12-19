@@ -2,7 +2,6 @@
 use super::utils;
 use std::fs::read_to_string;
 use std::time::Instant;
-use std::usize;
 
 pub fn _part1() {
     let lines: Vec<String> = utils::_read_input_whole("data/day_01/input.txt");

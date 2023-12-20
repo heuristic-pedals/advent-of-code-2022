@@ -9,7 +9,7 @@ fn main() {
     // day selection
     match day {
         1 => aoc::day_01::part1_part2_v2(),
-        2 => aoc::day_02::part1(),
+        2 => aoc::day_02::part1_part2(),
         _ => println!("Unknown day number {day}."),
     }
 }

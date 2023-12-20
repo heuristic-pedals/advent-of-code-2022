@@ -5,7 +5,7 @@ use std::fs::File;
 use std::io::{self, BufRead};
 use std::time::Instant;
 
-pub fn part1() {
+pub fn part1_part2() {
     let timer: Instant = Instant::now();
 
     let file: File = File::open("data/day_02/input.txt").unwrap();

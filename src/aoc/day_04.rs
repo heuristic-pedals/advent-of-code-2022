@@ -10,13 +10,23 @@ pub fn part_1() {
 
     let input: String = read_to_string("data/day_04/input.txt").unwrap();
 
-    let num_overlaps: usize = input
-        .lines()
-        .map(|x| parse_ints_in_line(&x))
-        .map(|y| overlapping_bounds(y))
-        .sum();
+    let parsed_lines = input.lines().map(|x| parse_ints_in_line(&x));
 
-    println!("Day 4 Part 1: Number of overlaps {:?}", num_overlaps);
+    let mut total_complete_overlaps: usize = 0;
+    let mut total_partial_overlaps: usize = 0;
+    for parsed_line in parsed_lines {
+        total_complete_overlaps += completely_overlapping_bounds(&parsed_line);
+        total_partial_overlaps += partially_overlapping_bounds(&parsed_line);
+    }
+
+    println!(
+        "Day 4 Part 1: Number of complete overlaps {:?}",
+        total_complete_overlaps
+    );
+    println!(
+        "Day 4 Part 2: Number of partial overlaps {:?}",
+        total_partial_overlaps
+    );
     println!("Elapsed time: {:.2?}", timer.elapsed());
 }
 
@@ -33,15 +43,14 @@ fn parse_ints_in_line(line: &str) -> Vec<usize> {
         .collect::<Vec<usize>>()
 }
 
-/// Check for overlapping bounds
+/// Check for completely overlapping bounds
 ///
 /// # Arguments
 ///
 /// * `limits` - A vector of limits, paired like [min1, max1, min2, max2]
-fn overlapping_bounds(limits: Vec<usize>) -> usize {
+fn completely_overlapping_bounds(limits: &Vec<usize>) -> usize {
     let diff1: usize = limits[1] - limits[0];
     let diff2: usize = limits[3] - limits[2];
-
     if diff1 >= diff2 {
         if (limits[2] >= limits[0]) & (limits[3] <= limits[1]) {
             return 1;
@@ -54,5 +63,30 @@ fn overlapping_bounds(limits: Vec<usize>) -> usize {
         } else {
             return 0;
         }
+    }
+}
+
+/// Check for partially overlapping bounds
+///
+/// # Arguments
+///
+/// * `limits` - A vector of limits, paired like [min1, max1, min2, max2]
+fn partially_overlapping_bounds(limits: &Vec<usize>) -> usize {
+    let diff1: usize = limits[1] - limits[0];
+    let diff2: usize = limits[3] - limits[2];
+    if diff1 >= diff2 {
+        for limit in &limits[2..] {
+            if (limit >= &limits[0]) & (limit <= &limits[1]) {
+                return 1;
+            }
+        }
+        return 0;
+    } else {
+        for limit in &limits[..2] {
+            if (limit >= &limits[2]) & (limit <= &limits[3]) {
+                return 1;
+            }
+        }
+        return 0;
     }
 }

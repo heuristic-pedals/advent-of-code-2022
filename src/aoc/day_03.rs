@@ -16,9 +16,7 @@ pub fn part1_part2() {
 
     let vec_input = Vec::from_iter(input.lines());
     let chunked_input = vec_input.chunks(3);
-    let total_badges: usize = chunked_input
-        .map(|x: &[&str]| get_badge(x))
-        .sum();
+    let total_badges: usize = chunked_input.map(|x: &[&str]| get_badge(x)).sum();
 
     println!("Day 3 Part 1: Sum of duplicate items is {:?}", total_items);
     println!("Day 3 Part 2: Sum of badges is {:?}", total_badges);
@@ -31,8 +29,7 @@ pub fn part1_part2() {
 ///
 /// * `items` - A string deonoting the items in both compartments
 fn get_dup_item(items: String) -> usize {
-
-    let (comp_1, comp_2) = items.split_at(items.len()/2);
+    let (comp_1, comp_2) = items.split_at(items.len() / 2);
 
     let unique_bytes: &u8 = comp_1
         .as_bytes()
@@ -50,7 +47,6 @@ fn get_dup_item(items: String) -> usize {
 /// * `chunk` - A chunk representing 3 consecuitive strings deonoting the items
 ///             in both compartments of the bags
 fn get_badge(chunk: &[&str]) -> usize {
-
     let bag_1 = chunk[0].to_string().into_bytes();
 
     let badge_bytes: &u8 = bag_1

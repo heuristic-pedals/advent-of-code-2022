@@ -10,7 +10,7 @@ fn main() {
     match day {
         1 => aoc::day_01::part1_part2_v2(),
         2 => aoc::day_02::part1_part2(),
-        3 => aoc::day_03::part1(),
+        3 => aoc::day_03::part1_part2(),
         _ => println!("Unknown day number {day}."),
     }
 }

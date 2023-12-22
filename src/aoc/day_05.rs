@@ -8,17 +8,14 @@ pub fn part_1 () {
     let timer: Instant = Instant::now();
 
     let input: String = read_to_string("data/day_05/input.txt").unwrap();
-
     let (crates_sec, instructions_sec) = input.split_once("\n\n").unwrap();
 
-    let (first_line, _) = crates_sec.split_once("\n").unwrap();
-    let create_indices = linspace(1, first_line.len(), 4);
-    let num_indicies = create_indices.len();
-
-    let max_num_crates_start = crates_sec.lines().count() - 1;
-
     // alloc memory for an n x m matrix where n = space for all crates in one column, m = number of create columns
-    let mut crates = vec![vec![' '; max_num_crates_start * num_indicies]; num_indicies];
+    let (first_line, _) = crates_sec.split_once("\n").unwrap();
+    let create_indices: Vec<usize> = linspace(1, first_line.len(), 4);
+    let num_crate_cols: usize = create_indices.len();
+    let max_num_crates_start: usize = crates_sec.lines().count() - 1;
+    let mut crates: Vec<Vec<char>> = vec![vec![' '; max_num_crates_start * num_crate_cols]; num_crate_cols];
 
     // parse crates into starting locations
     for (i, line) in crates_sec.lines().rev().enumerate() {
@@ -38,45 +35,47 @@ pub fn part_1 () {
         .map(|x| x.into_iter().filter(|y| *y != ' ').count())
         .collect::<Vec<usize>>();
 
+    // get moves and reallocate crates 
     let moves: Vec<Vec<usize>> = parse_instructions(instructions_sec);
-
-    for crate_move in &moves {
-        let num_move = crate_move[0];
-        let from = crate_move[1] - 1;
-        let to = crate_move[2] - 1;
-
+    for crate_move in moves {
+        // knife and fork instructions out (easier to use variables)
+        let num_move: usize = crate_move[0];
+        let from: usize = crate_move[1] - 1;
+        let to: usize = crate_move[2] - 1;
+        // record all crates need moving, in reverse order
         let mut crates_moving = vec![' '; num_move];
         let mut i = crates_moving.len();
         for crate_char in &crates[from][num_crates[from]-num_move..num_crates[from]] {
             i -= 1;
             crates_moving[i] = *crate_char;
         }
-
+        // assign those crates to the expected column
         let mut j = num_crates[to];
         for crate_char in crates_moving {
             crates[to][j] = crate_char;
             j += 1;
         }
-
+        // remove crate records from previous column
         for k in num_crates[from]-num_move..num_crates[from] {
             crates[from][k] = ' ';
         }
-
+        // update crate counts
         num_crates[from] -= num_move;
         num_crates[to] += num_move;
     }
 
-    let mut last_crates = vec![' '; num_indicies];
+    // get last crate chars and parse into a string
+    let mut last_crates = vec![' '; num_crate_cols];
     for i in 0..last_crates.len() {
         last_crates[i] = crates[i][num_crates[i] - 1];
     }
-
     let last_crates_word = last_crates.into_iter().collect::<String>();
 
     println!("Day 5 Part 1: Last crates spell out: {:?}", last_crates_word);
     println!("Elapsed time: {:.2?}", timer.elapsed());
 }
 
+/// create a linspace between x0 and x1 with spacing dx
 fn linspace(x0: usize, x1: usize, dx: usize) -> Vec<usize> {
     let mut x: Vec<usize> = vec![x0; (x1 - x0)/dx + 1];
     for i in 1..x.len() {
@@ -85,6 +84,7 @@ fn linspace(x0: usize, x1: usize, dx: usize) -> Vec<usize> {
     x
 }
 
+/// knife and fork instructions out of line
 fn parse_instructions(inst: &str) -> Vec<Vec<usize>> {
     inst.lines()
         .map(

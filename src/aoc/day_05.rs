@@ -38,28 +38,18 @@ pub fn part_1 () {
     // get moves and reallocate crates 
     let moves: Vec<Vec<usize>> = parse_instructions(instructions_sec);
     for crate_move in moves {
-        // knife and fork instructions out (easier to use variables)
+        // knife and fork instructions out and re-index col nums to zero
         let num_move: usize = crate_move[0];
         let from: usize = crate_move[1] - 1;
         let to: usize = crate_move[2] - 1;
-        // record all crates need moving, in reverse order
-        let mut crates_moving = vec![' '; num_move];
-        let mut i = crates_moving.len();
-        for crate_char in &crates[from][num_crates[from]-num_move..num_crates[from]] {
-            i -= 1;
-            crates_moving[i] = *crate_char;
-        }
-        // assign those crates to the expected column
-        let mut j = num_crates[to];
-        for crate_char in crates_moving {
-            crates[to][j] = crate_char;
+        
+        // move and update crate numbers
+        let mut j: usize = num_crates[to];
+        for i in (num_crates[from]-num_move..num_crates[from]).rev() {
+            crates[to][j] = crates[from][i];
+            crates[from][i] = ' ';
             j += 1;
         }
-        // remove crate records from previous column
-        for k in num_crates[from]-num_move..num_crates[from] {
-            crates[from][k] = ' ';
-        }
-        // update crate counts
         num_crates[from] -= num_move;
         num_crates[to] += num_move;
     }

@@ -5,7 +5,7 @@ use regex::Regex;
 use std::fs::read_to_string;
 use std::time::Instant;
 
-pub fn part_1() {
+pub fn part1_part2() {
     let timer: Instant = Instant::now();
 
     let input: String = read_to_string("data/day_04/input.txt").unwrap();

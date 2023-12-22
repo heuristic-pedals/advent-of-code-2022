@@ -7,7 +7,7 @@ use std::time::Instant;
 pub fn part_1 () {
     let timer: Instant = Instant::now();
 
-    let input: String = read_to_string("data/day_05/test_input.txt").unwrap();
+    let input: String = read_to_string("data/day_05/input.txt").unwrap();
 
     let (crates_sec, instructions_sec) = input.split_once("\n\n").unwrap();
 
@@ -32,18 +32,48 @@ pub fn part_1 () {
         }
     }
 
-    dbg!(&crates);
-
-    let num_crates = crates
+    // get number of crates in each column
+    let mut num_crates = crates.clone()
         .into_iter()
         .map(|x| x.into_iter().filter(|y| *y != ' ').count())
         .collect::<Vec<usize>>();
 
-    dbg!(&num_crates);
+    let moves: Vec<Vec<usize>> = parse_instructions(instructions_sec);
 
-    let _moves: Vec<Vec<u8>> = parse_instructions(instructions_sec);
+    for crate_move in &moves {
+        let num_move = crate_move[0];
+        let from = crate_move[1] - 1;
+        let to = crate_move[2] - 1;
 
-    println!("Day 5 Part 1: Last crates spell out: {:?}", "hello");
+        let mut crates_moving = vec![' '; num_move];
+        let mut i = crates_moving.len();
+        for crate_char in &crates[from][num_crates[from]-num_move..num_crates[from]] {
+            i -= 1;
+            crates_moving[i] = *crate_char;
+        }
+
+        let mut j = num_crates[to];
+        for crate_char in crates_moving {
+            crates[to][j] = crate_char;
+            j += 1;
+        }
+
+        for k in num_crates[from]-num_move..num_crates[from] {
+            crates[from][k] = ' ';
+        }
+
+        num_crates[from] -= num_move;
+        num_crates[to] += num_move;
+    }
+
+    let mut last_crates = vec![' '; num_indicies];
+    for i in 0..last_crates.len() {
+        last_crates[i] = crates[i][num_crates[i] - 1];
+    }
+
+    let last_crates_word = last_crates.into_iter().collect::<String>();
+
+    println!("Day 5 Part 1: Last crates spell out: {:?}", last_crates_word);
     println!("Elapsed time: {:.2?}", timer.elapsed());
 }
 
@@ -55,15 +85,15 @@ fn linspace(x0: usize, x1: usize, dx: usize) -> Vec<usize> {
     x
 }
 
-fn parse_instructions(inst: &str) -> Vec<Vec<u8>> {
+fn parse_instructions(inst: &str) -> Vec<Vec<usize>> {
     inst.lines()
         .map(
             |x| x.replace("move ", "")
             .replace(" from ", ",")
             .replace(" to ", ",")
             .split(',')
-            .map(|y| y.parse::<u8>().unwrap())
-            .collect::<Vec<u8>>()
+            .map(|y| y.parse::<usize>().unwrap())
+            .collect::<Vec<usize>>()
         )
         .collect()
 }

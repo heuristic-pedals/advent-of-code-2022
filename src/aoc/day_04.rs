@@ -52,18 +52,14 @@ fn completely_overlapping_bounds(limits: &Vec<usize>) -> usize {
     let diff1: usize = limits[1] - limits[0];
     let diff2: usize = limits[3] - limits[2];
     match diff1 >= diff2 {
-        true => {
-            match (limits[2] >= limits[0]) && (limits[3] <= limits[1]) {
-                true => 1,
-                _ => 0,
-            }
-        }
-        _ => {
-            match (limits[0] >= limits[2]) && (limits[1] <= limits[3]) {
-                true => 1,
-                _ => 0,
-            }
-        }
+        true => match (limits[2] >= limits[0]) && (limits[3] <= limits[1]) {
+            true => 1,
+            _ => 0,
+        },
+        _ => match (limits[0] >= limits[2]) && (limits[1] <= limits[3]) {
+            true => 1,
+            _ => 0,
+        },
     }
 }
 
@@ -74,7 +70,7 @@ fn completely_overlapping_bounds(limits: &Vec<usize>) -> usize {
 /// * `limits` - A vector of limits, paired like [min1, max1, min2, max2]
 fn partially_overlapping_bounds(limits: &Vec<usize>) -> usize {
     if (limits[1] >= limits[2]) && (limits[3] >= limits[0]) {
-        return 1
+        return 1;
     }
     0
 }

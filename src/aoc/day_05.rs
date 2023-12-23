@@ -4,7 +4,7 @@
 use std::fs::read_to_string;
 use std::time::Instant;
 
-pub fn part_1() {
+pub fn part1_part2() {
     let timer: Instant = Instant::now();
 
     let input: String = read_to_string("data/day_05/input.txt").unwrap();
@@ -19,12 +19,16 @@ pub fn part_1() {
     // get moves and reallocate crates
     let moves: Vec<Vec<usize>> = parse_instructions(instructions_sec);
 
-    // move crates
-    let part_1_crates = move_crates(&mut crates, moves, &mut num_crates, num_crate_cols);
+    // log identical starting configuration for part 2
+    let mut crates_p2: Vec<Vec<char>> = crates.clone();
+    let mut num_crates_p2: Vec<usize> = num_crates.clone();
 
-    assert_eq!(part_1_crates, "PTWLTDSJV");
+    // move crates using cratemover 9000 and 9001 features
+    let part_1_last_crates: String = move_crates(&mut crates, &moves, &mut num_crates, num_crate_cols, true);
+    let part_2_last_crates: String = move_crates(&mut crates_p2, &moves, &mut num_crates_p2, num_crate_cols, false);
 
-    println!("Day 5 Part 1: Last crates spell out: {:?}", part_1_crates);
+    println!("Day 5 Part 1: Last crates spell out: {:?}", part_1_last_crates);
+    println!("Day 5 Part 2: Last crates spell out: {:?}", part_2_last_crates);
     println!("Elapsed time: {:.2?}", timer.elapsed());
 }
 
@@ -83,9 +87,10 @@ fn crates_per_column(crates: &Vec<Vec<char>>) -> Vec<usize> {
 
 fn move_crates(
     crates: &mut Vec<Vec<char>>,
-    moves: Vec<Vec<usize>>,
+    moves: &Vec<Vec<usize>>,
     num_crates: &mut Vec<usize>,
     num_crate_cols: usize,
+    cratemover_9000: bool,
 ) -> String {
     for crate_move in moves {
         // knife and fork instructions out and re-index col nums to zero
@@ -95,11 +100,22 @@ fn move_crates(
 
         // move and update crate numbers
         let mut j: usize = num_crates[to];
-        for i in (num_crates[from] - num_move..num_crates[from]).rev() {
-            crates[to][j] = crates[from][i];
-            crates[from][i] = ' ';
-            j += 1;
-        }
+        match cratemover_9000 {
+            true => {
+                for i in (num_crates[from] - num_move..num_crates[from]).rev() {
+                    crates[to][j] = crates[from][i];
+                    crates[from][i] = ' ';
+                    j += 1;
+                }
+            }
+            _ => {
+                for i in num_crates[from] - num_move..num_crates[from] {
+                    crates[to][j] = crates[from][i];
+                    crates[from][i] = ' ';
+                    j += 1;
+                }
+            }
+        };
         num_crates[from] -= num_move;
         num_crates[to] += num_move;
     }

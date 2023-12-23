@@ -10,13 +10,9 @@ pub fn part1_part2() {
     let input: String = read_to_string("data/day_05/input.txt").unwrap();
     let (crates_sec, instructions_sec) = input.split_once("\n\n").unwrap();
 
-    // stack initial crates
+    // stack initial crates, get number of crates in each column, get instrucitons
     let (mut crates, num_crate_cols) = stack_initial_crates(crates_sec);
-
-    // get number of crates in each column
     let mut num_crates: Vec<usize> = crates_per_column(&crates);
-
-    // get moves and reallocate crates
     let moves: Vec<Vec<usize>> = parse_instructions(instructions_sec);
 
     // log identical starting configuration for part 2
@@ -24,11 +20,24 @@ pub fn part1_part2() {
     let mut num_crates_p2: Vec<usize> = num_crates.clone();
 
     // move crates using cratemover 9000 and 9001 features
-    let part_1_last_crates: String = move_crates(&mut crates, &moves, &mut num_crates, num_crate_cols, true);
-    let part_2_last_crates: String = move_crates(&mut crates_p2, &moves, &mut num_crates_p2, num_crate_cols, false);
+    let part_1_last_crates: String =
+        move_crates(&mut crates, &moves, &mut num_crates, num_crate_cols, true);
+    let part_2_last_crates: String = move_crates(
+        &mut crates_p2,
+        &moves,
+        &mut num_crates_p2,
+        num_crate_cols,
+        false,
+    );
 
-    println!("Day 5 Part 1: Last crates spell out: {:?}", part_1_last_crates);
-    println!("Day 5 Part 2: Last crates spell out: {:?}", part_2_last_crates);
+    println!(
+        "Day 5 Part 1: Last crates spell out: {:?}",
+        part_1_last_crates
+    );
+    println!(
+        "Day 5 Part 2: Last crates spell out: {:?}",
+        part_2_last_crates
+    );
     println!("Elapsed time: {:.2?}", timer.elapsed());
 }
 
@@ -56,7 +65,8 @@ fn parse_instructions(inst: &str) -> Vec<Vec<usize>> {
 }
 
 fn stack_initial_crates(crates_sec: &str) -> (Vec<Vec<char>>, usize) {
-    // alloc memory for an n x m matrix where n = space for all crates in one column, m = number of create columns
+    // alloc memory for an n x m matrix where n = space for all crates in one column,
+    // m = number of create columns
     let (first_line, _) = crates_sec.split_once("\n").unwrap();
     let create_indices: Vec<usize> = linspace(1, first_line.len(), 4);
     let num_crate_cols: usize = create_indices.len();

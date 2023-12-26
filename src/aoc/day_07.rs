@@ -9,7 +9,7 @@ use std::usize;
 pub fn part1() {
     let timer = Instant::now();
 
-    let input =  read_to_string("data/day_07/test_input.txt")
+    let input =  read_to_string("data/day_07/input.txt")
                             .unwrap()
                             .replace("$ ls\n", "")
                             .replace("$ cd ..\n", "");
@@ -27,9 +27,14 @@ pub fn part1() {
         dir_map.insert(k, (v1, v2));
     }
 
-    dbg!(dir_size(String::from("/"), &dir_map, &mut result_map));
-    dbg!(&result_map);
+    dir_size(String::from("/"), &dir_map, &mut result_map);
+    
+    let dir_sizes = result_map.values()
+                                .into_iter()
+                                .filter(|x| **x <= 100000)
+                                .sum::<usize>();
 
+    println!("Day 7 Part 1: Combined size of dirs <= 100000: {:?}", dir_sizes);
     println!("Elapsed time: {:.2?}", timer.elapsed());
 }
 

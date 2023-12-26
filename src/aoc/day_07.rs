@@ -20,13 +20,15 @@ pub fn part1() {
         .collect::<Vec<(&str, &str)>>();
 
     let mut dir_map: HashMap<String, (Vec<String>, usize)> = HashMap::new();
+    let mut result_map: HashMap<String, usize> = HashMap::new();
 
     for dir_contents in parsed_input {
         let (k, v1, v2) = get_dirs_and_files(dir_contents);
         dir_map.insert(k, (v1, v2));
     }
 
-    dbg!(dir_size(String::from("/"), &dir_map));
+    dbg!(dir_size(String::from("/"), &dir_map, &mut result_map));
+    dbg!(&result_map);
 
     println!("Elapsed time: {:.2?}", timer.elapsed());
 }
@@ -61,18 +63,24 @@ fn get_dirs_and_files(dir_content: (&str, &str)) -> (String, Vec<String>, usize)
     (k, dirs, files.iter().sum::<usize>())
 }
 
-fn dir_size(dir_name: String, dir_map: &HashMap<String, (Vec<String>, usize)>) -> usize {
+fn dir_size(dir_name: String, dir_map: &HashMap<String, (Vec<String>, usize)>, res_map: &mut HashMap<String, usize>) -> usize {
 
     let dir_contents = dir_map.get(&dir_name).unwrap();
 
+    if res_map.contains_key("dir_name") {
+        return *res_map.get(&dir_name).unwrap();
+    }
     if dir_contents.0.len() != 0 {
         let mut sub_dir_total: usize = 0;
         for dir in &dir_contents.0 {
-            sub_dir_total += dir_size(dir.clone(), dir_map);
+            sub_dir_total += dir_size(dir.clone(), dir_map, res_map);
         }
-        return dir_contents.1 + sub_dir_total;
+        let total = dir_contents.1 + sub_dir_total;
+        res_map.insert(dir_name, total);
+        return total;
 
     } else {
+        res_map.insert(dir_name, dir_contents.1);
         return dir_contents.1
     }
 }

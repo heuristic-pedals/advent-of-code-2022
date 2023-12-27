@@ -4,7 +4,6 @@
 use std::collections::HashMap;
 use std::fs::read_to_string;
 use std::time::Instant;
-use std::usize;
 
 pub fn part1_part2() {
     let timer = Instant::now();

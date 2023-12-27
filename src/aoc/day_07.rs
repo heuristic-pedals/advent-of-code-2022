@@ -24,14 +24,12 @@ pub fn part1() {
         dir_map.insert(k, (v1, v2));
     }
 
-    // collate results for each directory
-    let mut result_map: HashMap<String, usize> = HashMap::new();
-    for k in dir_map.keys() {
-        result_map.insert(k.to_string(), dir_size(String::from(k), &dir_map));
-    }
+    // collate results for each dir into hashmap
+    let mut dir_sizes: HashMap<String, usize> = HashMap::new();
+    dir_size(String::from("/"), &dir_map, &mut dir_sizes);
     
     // get sum of dir sizes < 100000
-    let dir_sizes = result_map.values()
+    let dir_sizes = dir_sizes.values()
                                 .into_iter()
                                 .filter(|x| **x <= 100000)
                                 .sum::<usize>();
@@ -71,18 +69,20 @@ fn get_dirs_and_files(dir_content: (&str, &str)) -> (String, Vec<String>, usize)
     (k, dirs, files.iter().sum::<usize>())
 }
 
-fn dir_size(dir_name: String, dir_map: &HashMap<String, (Vec<String>, usize)>) -> usize {
+fn dir_size(dir_name: String, dir_map: &HashMap<String, (Vec<String>, usize)>, dir_sizes: &mut HashMap<String, usize>) -> usize {
 
     let dir_contents = dir_map.get(&dir_name).unwrap();
 
     if dir_contents.0.len() != 0 {
         let mut sub_dir_total: usize = 0;
         for dir in &dir_contents.0 {
-            sub_dir_total += dir_size(dir.clone(), dir_map);
+            sub_dir_total += dir_size(dir.clone(), dir_map, dir_sizes);
         }
+        dir_sizes.insert(dir_name, dir_contents.1 + sub_dir_total);
         return dir_contents.1 + sub_dir_total
 
     } else {
+        dir_sizes.insert(dir_name, dir_contents.1);
         return dir_contents.1
     }
 }

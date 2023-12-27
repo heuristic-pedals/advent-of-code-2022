@@ -6,7 +6,7 @@ use std::fs::read_to_string;
 use std::time::Instant;
 use std::usize;
 
-pub fn part1() {
+pub fn part1_part2() {
     let timer = Instant::now();
 
     // dedup nested folder names and remove unnessary lines
@@ -30,16 +30,31 @@ pub fn part1() {
     dir_size(String::from("/"), &dir_map, &mut dir_sizes);
 
     // get sum of dir sizes < 100000
-    let dir_sizes = dir_sizes
+    let small_dir_sizes = dir_sizes
         .values()
         .into_iter()
         .filter(|x| **x <= 100000)
         .sum::<usize>();
 
-    assert_eq!(dir_sizes, 1490523);
+    // part 2 - calculate smallest dir deletable to install update
+    let total_disk_space: usize = 70000000;
+    let update_size: usize = 30000000;
+    let remaining_disk_space: usize = total_disk_space - dir_sizes.get("/").unwrap();
+    let minimum_del = update_size - remaining_disk_space;
+    let mut del_candidates = dir_sizes
+        .values()
+        .into_iter()
+        .filter(|x| **x >= minimum_del)
+        .collect::<Vec<&usize>>();
+    del_candidates.sort();
+
     println!(
         "Day 7 Part 1: Combined size of dirs <= 100000: {:?}",
-        dir_sizes
+        small_dir_sizes
+    );
+    println!(
+        "Day 7 Part 2: Size of smallest deletable dir for update: {:?}",
+        del_candidates[0]
     );
     println!("Elapsed time: {:.2?}", timer.elapsed());
 }

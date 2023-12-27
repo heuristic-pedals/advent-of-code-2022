@@ -14,7 +14,7 @@ fn main() {
         4 => aoc::day_04::part1_part2(),
         5 => aoc::day_05::part1_part2(),
         6 => aoc::day_06::part1_part2(),
-        7 => aoc::day_07::part1(),
+        7 => aoc::day_07::part1_part2(),
         _ => println!("Unknown day number {day}."),
     }
 }
